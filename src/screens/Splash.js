@@ -1,12 +1,24 @@
-import {Layout} from '@ui-kitten/components';
+import {Text, Layout} from '@ui-kitten/components';
 import React from 'react';
 import {StyleSheet, Image, View} from 'react-native';
 
 const Splash = () => {
   return (
-    <Layout>
-      <View>
-        <Image />
+    <Layout style={styles.container}>
+      <View style={styles.imageContainer}>
+        <Image
+          source={require('../assets/rocket_one.png')}
+          resizeMode="contain"
+          style={{
+            width: '95%',
+            transform: [{rotate: '-15deg'}, {translateX: -10}],
+          }}
+        />
+      </View>
+      <View style={styles.textContainer}>
+        <Text style={styles.text} category="h1" status="basic">
+          Boost your Productivity
+        </Text>
       </View>
     </Layout>
   );
@@ -14,4 +26,23 @@ const Splash = () => {
 
 export default Splash;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 10,
+  },
+  imageContainer: {
+    flex: 0.6,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textContainer: {
+    flex: 0.4,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+  },
+  text: {
+    fontWeight: '900',
+    fontSize: 75,
+  },
+});

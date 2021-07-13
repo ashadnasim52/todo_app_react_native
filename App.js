@@ -22,7 +22,11 @@ export default () => (
   <NavigationContainer>
     <IconRegistry icons={EvaIconsPack} />
     <ApplicationProvider {...eva} theme={{...eva.dark, ...theme}}>
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+        initialRouteName="AddTodo">
         <Stack.Screen name="Splash" component={Splash} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="AddTodo" component={AddTodo} />

@@ -1,8 +1,13 @@
 import {Text, Layout} from '@ui-kitten/components';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet, Image, View} from 'react-native';
 
-const Splash = () => {
+const Splash = ({navigation}) => {
+  useEffect(() => {
+    setTimeout(() => {
+      navigation.navigate('Home');
+    }, 1000);
+  }, []);
   return (
     <Layout style={styles.container}>
       <View style={styles.imageContainer}>

@@ -61,7 +61,8 @@ export default (state = initialState, action) => {
     case ADD_TASK:
       return [...state, action.payload];
     case REMOVE_TASK:
-      return state.filter(todo => todo.id !== action.payload);
+      console.log(state.filter(task => task.id !== action.payload));
+      return state.filter(task => task.id !== action.payload);
     case MARK_COMPLETE:
       return state.map(task => {
         if (task.id == action.payload) {
@@ -70,8 +71,7 @@ export default (state = initialState, action) => {
         console.log(task);
         return task;
       });
-    case FILTER_TASK:
-      return state.filter(task => task.category === action.payload);
+
     default:
       return state;
   }

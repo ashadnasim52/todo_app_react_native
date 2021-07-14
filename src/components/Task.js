@@ -21,7 +21,30 @@ const Task = ({task, markComplete, removeTask}) => {
   return (
     <ListItem
       style={styles.item}
-      title={task.title}
+      title={evaProps => (
+        <Text
+          {...evaProps}
+          style={{
+            paddingLeft: 10,
+            textDecorationLine: task.isCompleted ? 'line-through' : 'none',
+          }}
+          onPress={() => markComplete(task.id)}>
+          {task.title}
+        </Text>
+      )}
+      description={evaProps => (
+        <Text
+          {...evaProps}
+          style={{
+            paddingLeft: 10,
+            textDecorationLine: task.isCompleted ? 'line-through' : 'none',
+          }}
+          appearance="hint"
+          category="c1"
+          onPress={() => markComplete(task.id)}>
+          {task.description}
+        </Text>
+      )}
       accessoryLeft={renderCheckBox}
       accessoryRight={props => (
         <View
@@ -30,9 +53,17 @@ const Task = ({task, markComplete, removeTask}) => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
+          <Button
+            style={styles.button}
+            status="basic"
+            size="tiny"
+            appearance="outline">
+            {task.priority}
+          </Button>
           <Button style={styles.button} status="primary" size="tiny">
             {task.category}
           </Button>
+
           <TouchableOpacity onPress={() => removeTask(task.id)}>
             <Icon
               name="trash-2"
@@ -51,5 +82,8 @@ export default Task;
 const styles = StyleSheet.create({
   item: {
     marginVertical: 4,
+  },
+  button: {
+    marginHorizontal: 4,
   },
 });

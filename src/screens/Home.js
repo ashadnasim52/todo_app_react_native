@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -20,15 +20,15 @@ import Task from '../components/Task';
 import {connect} from 'react-redux';
 import {filterTask, markComplete, removeTask} from '../action/task';
 
-const Home = ({
-  navigation,
-  categories,
-  tasks,
-  markComplete,
-  removeTask,
-  filterTask,
-}) => {
-  // if(!tasks)
+const Home = ({navigation, categories, tasks, markComplete, removeTask}) => {
+  useEffect(() => {
+    setLocalTasks([...tasks]);
+  }, [tasks]);
+  const [localTasks, setLocalTasks] = useState([...tasks]);
+  const filterLocalTasks = categoryName => {
+    setLocalTasks(tasks.filter(task => task.category === categoryName));
+  };
+
   return (
     <Layout style={styles.container}>
       <View
@@ -40,7 +40,8 @@ const Home = ({
         </Text>
 
         <Text style={styles.text} appearance="hint">
-          4 out of 7 completed
+          {localTasks.filter(task => task.isCompleted === true).length} out of{' '}
+          {localTasks.length} completed
         </Text>
       </View>
       <Layout
@@ -73,7 +74,7 @@ const Home = ({
                   justifyContent: 'center',
                   marginRight: 5,
                 }}
-                onPress={() => filterTask(item)}>
+                onPress={() => filterLocalTasks(item)}>
                 <Text category="h6" status="basic">
                   {item}
                 </Text>
@@ -86,8 +87,24 @@ const Home = ({
                   paddingHorizontal: 30,
                   justifyContent: 'center',
                 }}>
-                <Button>Add New Category</Button>
+                <Button onPress={() => navigation.navigate('AddCategory')}>
+                  Add New Category
+                </Button>
               </View>
+            }
+            ListHeaderComponent={
+              <Card
+                style={{
+                  height: 80,
+                  paddingHorizontal: 30,
+                  justifyContent: 'center',
+                  marginRight: 5,
+                }}
+                onPress={() => setLocalTasks([...tasks])}>
+                <Text category="h6" status="basic">
+                  All
+                </Text>
+              </Card>
             }
           />
         </View>
@@ -100,7 +117,7 @@ const Home = ({
               flexGrow: 1,
             }}
             contentContainerStyle={styles.contentContainer}
-            data={tasks}
+            data={localTasks}
             renderItem={({item}) => (
               <Task
                 task={item}

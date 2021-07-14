@@ -19,6 +19,7 @@ const Stack = createStackNavigator();
 import {default as theme} from './custom-theme'; // <-- Import app theme
 import {Provider} from 'react-redux';
 import store from './src/store';
+import AddCategory from './src/screens/AddCategory';
 
 export default () => (
   <NavigationContainer>
@@ -33,6 +34,7 @@ export default () => (
           <Stack.Screen name="Splash" component={Splash} />
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="AddTodo" component={AddTodo} />
+          <Stack.Screen name="AddCategory" component={AddCategory} />
         </Stack.Navigator>
       </Provider>
     </ApplicationProvider>

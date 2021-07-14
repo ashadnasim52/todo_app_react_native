@@ -1,12 +1,46 @@
-import {Text, Layout, Input, Button} from '@ui-kitten/components';
+import {Text, Layout, Icon, Input, Button} from '@ui-kitten/components';
 import React, {useState} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
+import {connect} from 'react-redux';
+import shortid from 'shortid';
+import {addTask} from '../action/task';
+const AddTodo = ({categories, navigation, addTask}) => {
+  const AddIcon = props => <Icon {...props} name="plus-circle-outline" />;
 
-const AddTodo = () => {
-  const [value, setValue] = React.useState('');
+  const [taskName, setTaskName] = useState(null);
+  const [taskDescription, setTaskDescription] = useState(null);
+  const [taskPriority, setTaskPriority] = useState(null);
+  const [taskCategory, setTaskCategory] = useState(null);
+
   const [categorySelectedIndex, setCategorySelectedIndex] = useState(null);
   const [priorityIndex, setPriorityIndex] = useState(null);
+  const handleSubmit = async () => {
+    try {
+      // if both fields is not provided
+      if (!taskName || !taskDescription) {
+        return alert('Please add both field');
+      }
+
+      // new object ot save
+      const task = {
+        id: shortid.generate(),
+        title: taskName,
+        description: taskDescription,
+        priority: taskPriority,
+        category: taskCategory,
+        date: Date.now(),
+      };
+      console.log(task);
+
+      addTask(task);
+
+      // after successfully adding to list
+      navigation.navigate('Home');
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Layout style={styles.container}>
       <View style={styles.textContainer}>
@@ -36,8 +70,8 @@ const AddTodo = () => {
         }}>
         <Input
           placeholder="Task Name"
-          value={value}
-          onChangeText={nextValue => setValue(nextValue)}
+          value={taskName}
+          onChangeText={nextValue => setTaskName(nextValue)}
           style={styles.input}
           size="large"
           status="primary"
@@ -46,9 +80,9 @@ const AddTodo = () => {
           multiline={true}
           textStyle={{minHeight: 64}}
           placeholder="Task Description"
-          value={value}
+          value={taskDescription}
           style={styles.input}
-          onChangeText={nextValue => setValue(nextValue)}
+          onChangeText={nextValue => setTaskDescription(nextValue)}
           size="large"
           status="primary"
         />
@@ -64,7 +98,10 @@ const AddTodo = () => {
             <Button
               style={styles.button}
               appearance={priorityIndex === 0 ? 'filled' : 'outline'}
-              onPress={() => setPriorityIndex(0)}
+              onPress={() => {
+                setPriorityIndex(0);
+                setTaskPriority('Low');
+              }}
               status="info">
               Low
             </Button>
@@ -72,7 +109,10 @@ const AddTodo = () => {
             <Button
               style={styles.button}
               appearance={priorityIndex === 1 ? 'filled' : 'outline'}
-              onPress={() => setPriorityIndex(1)}
+              onPress={() => {
+                setPriorityIndex(1);
+                setTaskPriority('Medium');
+              }}
               status="warning">
               Medium
             </Button>
@@ -80,7 +120,10 @@ const AddTodo = () => {
             <Button
               style={styles.button}
               appearance={priorityIndex === 2 ? 'filled' : 'outline'}
-              onPress={() => setPriorityIndex(2)}
+              onPress={() => {
+                setPriorityIndex(2);
+                setTaskPriority('High');
+              }}
               status="danger">
               High
             </Button>
@@ -92,7 +135,7 @@ const AddTodo = () => {
             Category
           </Text>
           <FlatList
-            data={['Work', 'Family', 'Food', 'Gym', 'Home']}
+            data={categories}
             numColumns={3}
             keyExtractor={item => item}
             renderItem={({item, index}) => (
@@ -106,7 +149,10 @@ const AddTodo = () => {
                 appearance={
                   categorySelectedIndex === index ? 'filled' : 'outline'
                 }
-                onPress={() => setCategorySelectedIndex(index)}>
+                onPress={() => {
+                  setCategorySelectedIndex(index);
+                  setTaskCategory(item);
+                }}>
                 {item}
               </Button>
             )}
@@ -125,7 +171,11 @@ const AddTodo = () => {
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
           }}>
-          <Button style={styles.button} status="primary">
+          <Button
+            style={styles.button}
+            status="primary"
+            onPress={handleSubmit}
+            accessoryLeft={AddIcon}>
             Add Task
           </Button>
         </Layout>
@@ -133,9 +183,15 @@ const AddTodo = () => {
     </Layout>
   );
 };
+// sending state as props and checking using the props-types
+const mapStateToProps = state => ({
+  categories: state.categories,
+});
+const mapDispatchToProps = {
+  addTask: data => addTask(data),
+};
 
-export default AddTodo;
-
+export default connect(mapStateToProps, mapDispatchToProps)(AddTodo);
 const styles = StyleSheet.create({
   container: {
     flex: 1,

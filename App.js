@@ -17,20 +17,24 @@ import Splash from './src/screens/Splash';
 import AddTodo from './src/screens/AddTodo';
 const Stack = createStackNavigator();
 import {default as theme} from './custom-theme'; // <-- Import app theme
+import {Provider} from 'react-redux';
+import store from './src/store';
 
 export default () => (
   <NavigationContainer>
     <IconRegistry icons={EvaIconsPack} />
     <ApplicationProvider {...eva} theme={{...eva.dark, ...theme}}>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}
-        initialRouteName="AddTodo">
-        <Stack.Screen name="Splash" component={Splash} />
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="AddTodo" component={AddTodo} />
-      </Stack.Navigator>
+      <Provider store={store}>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+          initialRouteName="Home">
+          <Stack.Screen name="Splash" component={Splash} />
+          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="AddTodo" component={AddTodo} />
+        </Stack.Navigator>
+      </Provider>
     </ApplicationProvider>
   </NavigationContainer>
 );
